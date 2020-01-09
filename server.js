@@ -48,7 +48,6 @@ var characters = [
 // Routes
 // =============================================================
 app.use("/", express.static(__dirname + '/public'));
-//app.use("/", express.static(__dirname + '/public/js'));
 
 
 // Basic route that sends the user first to the home Page
@@ -74,12 +73,9 @@ app.get("/notes", function(req, res) {
         var oldStuff=[];
         var newStuff = req.body;
         oldStuff=JSON.parse(data);
+        newStuff['id']=oldStuff.length;  //add the id parameter
         oldStuff.push(newStuff);
-        //console.log(oldStuff);
-        //console.log(`the array is now ${oldStuff.length} items long`)
-        
-           
-        fs.writeFile ('./db/db.json',JSON.stringify(oldStuff), function (err) {
+             fs.writeFile ('./db/db.json',JSON.stringify(oldStuff), function (err) {
             if (err) {
                 return console.log (err);
             }
@@ -92,51 +88,42 @@ app.get("/notes", function(req, res) {
   });
 
   app.delete("/api/notes/:id", function(req, res) {
-      console.log(`a delete request came in for item ${req.params.id}`);
+      console.log(`a delte request came in for item ${req.params.id}`);
+
+      fs.readFile('./db/db.json', 'utf8',(err, data) => {
+        if (err) throw err;
+        
+        var dataSet=JSON.parse(data);
+       // console.log(dataSet);
+        var newSet=[];
+        var thisItem; 
+        var newCounter=0;      
+        for (let i=0; i<dataSet.length;i++){
+            if (i!== parseInt(req.params.id)) {
+                thisItem=dataSet[i];
+                thisItem['id']=newCounter;       //have to completely redo the ids to not leave gaps
+                newSet.push(thisItem);
+                newCounter++;
+            }
+        }
+        console.log(newSet);
+
+        //now write the file
+        
+        fs.writeFile ('./db/db.json',JSON.stringify(newSet), function (err) {
+            if (err) {
+                return console.log (err);
+            }
+            console.log ('Success!');
+        });
+        
+        res.end(data);
+      });
+
       res.end();
   });
 
-//garbage for reference below here:
-app.get("/add", function(req, res) {
-    res.sendFile(path.join(__dirname, "add.html"));
-  });
-// Displays all characters
-app.get("/api/characters", function(req, res) {
-  return res.json(characters);
- 
-});
 
-// Displays a single character, or returns false
-app.get("/api/characters/:character", function(req, res) {
-  var chosen = req.params.character;
-
-  console.log(chosen);
-
-  for (var i = 0; i < characters.length; i++) {
-    if (chosen === characters[i].routeName) {
-      return res.json(characters[i]);
-    }
-  }
-
-  return res.json(false);
-});
-
-// Create New Characters - takes in JSON input
-app.post("/api/characters", function(req, res) {
-  // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  var newCharacter = req.body;
-
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-
-  console.log(newCharacter);
-
-  characters.push(newCharacter);
-
-  res.json(newCharacter);
-});
 
 // Starts the server to begin listening
 // =============================================================
