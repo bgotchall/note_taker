@@ -19,35 +19,9 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Star Wars Characters (DATA)
-// =============================================================
-var characters = [
-  {
-    routeName: "yoda",
-    name: "Yoda",
-    role: "Jedi Master",
-    age: 900,
-    forcePoints: 2000
-  },
-  {
-    routeName: "darthmaul",
-    name: "Darth Maul",
-    role: "Sith Lord",
-    age: 200,
-    forcePoints: 1200
-  },
-  {
-    routeName: "obiwankenobi",
-    name: "Obi Wan Kenobi",
-    role: "Jedi Master",
-    age: 55,
-    forcePoints: 1350
-  }
-];
-
 // Routes
 // =============================================================
-app.use("/", express.static(__dirname + '/public'));
+app.use("/", express.static(__dirname + '/public'));  //so the references in index.html work
 
 
 // Basic route that sends the user first to the home Page
@@ -71,8 +45,8 @@ app.get("/notes", function(req, res) {
     fs.readFile('./db/db.json', 'utf8',(err, data) => {
         if (err) throw err;
         var oldStuff=[];
-        var newStuff = req.body;
-        oldStuff=JSON.parse(data);
+        var newStuff = req.body;    //note to be added
+        oldStuff=JSON.parse(data);  //the file so far
         newStuff['id']=oldStuff.length;  //add the id parameter
         oldStuff.push(newStuff);
              fs.writeFile ('./db/db.json',JSON.stringify(oldStuff), function (err) {
@@ -88,7 +62,7 @@ app.get("/notes", function(req, res) {
   });
 
   app.delete("/api/notes/:id", function(req, res) {
-      console.log(`a delte request came in for item ${req.params.id}`);
+      console.log(`a delete request came in for item ${req.params.id}`);
 
       fs.readFile('./db/db.json', 'utf8',(err, data) => {
         if (err) throw err;
