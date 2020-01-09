@@ -1,18 +1,1 @@
-[
-    {
-        "title": "Test Title1",
-        "text": "text 1 with stuff about ones"
-    },
-    {
-        "title": "Test Title2",
-        "text": "text 2 all 2 stuff"
-    },
-    {
-        "title": "new note",
-        "text": "lafdsjflkjadsklfjdslk;f;jaldskfjlkdsjfkl"
-    },
-    {
-        "title": "fourth note",
-        "text": "44444xxxxxxxxxxxxxxxxxxx44444444444444"
-    }
-]
+[{"title":"Test Title1","text":"text 1 with stuff about ones"},{"title":"Test Title2","text":"text 2 all 2 stuff"},{"title":"new note","text":"lafdsjflkjadsklfjdslk;f;jaldskfjlkdsjfkl"},{"title":"fourth note","text":"44444xxxxxxxxxmodifiedxxxxxxxxxx44444444444444"},{"title":"this is a new note","text":"stuff for the note"},{"title":"6th note","text":"happy times indeed"}]

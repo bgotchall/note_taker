@@ -47,6 +47,9 @@ var characters = [
 
 // Routes
 // =============================================================
+app.use("/", express.static(__dirname + '/public'));
+//app.use("/", express.static(__dirname + '/public/js'));
+
 
 // Basic route that sends the user first to the home Page
 app.get("/", function(req, res) {
@@ -60,7 +63,7 @@ app.get("/notes", function(req, res) {
   app.get("/api/notes", function(req, res) {
     fs.readFile('./db/db.json', 'utf8',(err, data) => {
         if (err) throw err;
-        console.log(data);
+       // console.log(data);
         res.end(data);
       });
   });
@@ -72,8 +75,8 @@ app.get("/notes", function(req, res) {
         var newStuff = req.body;
         oldStuff=JSON.parse(data);
         oldStuff.push(newStuff);
-        console.log(oldStuff);
-        console.log(`the array is now ${oldStuff.length} items long`)
+        //console.log(oldStuff);
+        //console.log(`the array is now ${oldStuff.length} items long`)
         
            
         fs.writeFile ('./db/db.json',JSON.stringify(oldStuff), function (err) {
@@ -89,6 +92,8 @@ app.get("/notes", function(req, res) {
   });
 
   app.delete("/api/notes/:id", function(req, res) {
+      console.log(`a delete request came in for item ${req.params.id}`);
+      res.end();
   });
 
 //garbage for reference below here:
@@ -98,6 +103,7 @@ app.get("/add", function(req, res) {
 // Displays all characters
 app.get("/api/characters", function(req, res) {
   return res.json(characters);
+ 
 });
 
 // Displays a single character, or returns false
