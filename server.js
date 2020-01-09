@@ -1,7 +1,14 @@
+//https://fast-wildwood-21495.herokuapp.com/
+//the heroku instructions are in supplemental.
+//highlights:  add a start line to the package.json.  has to be at root leve.
+//use command not bash.  have a up to date git repo.  do heroku create.  do git heroku push master
+
+
 // Dependencies
 // =============================================================
 var express = require("express");
 var path = require("path");
+var fs=require("fs");
 
 // Sets up the Express App
 // =============================================================
@@ -41,15 +48,53 @@ var characters = [
 // Routes
 // =============================================================
 
-// Basic route that sends the user first to the AJAX Page
+// Basic route that sends the user first to the home Page
 app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
+//sends user to the note page
+app.get("/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "/public/notes.html"));
+  });
+//shows all notes
+  app.get("/api/notes", function(req, res) {
+    fs.readFile('./db/db.json', 'utf8',(err, data) => {
+        if (err) throw err;
+        console.log(data);
+        res.end(data);
+      });
+  });
+//adds a note to the json file
+  app.post("/api/notes", function(req, res) {
+    fs.readFile('./db/db.json', 'utf8',(err, data) => {
+        if (err) throw err;
+        var oldStuff=[];
+        var newStuff = req.body;
+        oldStuff=JSON.parse(data);
+        oldStuff.push(newStuff);
+        console.log(oldStuff);
+        console.log(`the array is now ${oldStuff.length} items long`)
+        
+           
+        fs.writeFile ('./db/db.json',JSON.stringify(oldStuff), function (err) {
+            if (err) {
+                return console.log (err);
+            }
+            console.log ('Success!');
+            });
+        
+        res.end(data);
+      });
 
+  });
+
+  app.delete("/api/notes/:id", function(req, res) {
+  });
+
+//garbage for reference below here:
 app.get("/add", function(req, res) {
-  res.sendFile(path.join(__dirname, "add.html"));
-});
-
+    res.sendFile(path.join(__dirname, "add.html"));
+  });
 // Displays all characters
 app.get("/api/characters", function(req, res) {
   return res.json(characters);
